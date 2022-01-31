@@ -30,18 +30,6 @@ func TestStatistic_GetStatistic(t *testing.T) {
 	}
 
 	testError := errors.New("test error")
-	//
-	//mock.ExpectQuery(`SELECT (.+) FROM "pg_stat_statements"`).
-	//	WithArgs("select").
-	//	WillReturnError(testError)
-	//
-	//mock.ExpectQuery(`SELECT (.+) FROM "pg_stat_statements"`).
-	//	WithArgs("update").
-	//	WillReturnRows(
-	//		sqlmock.NewRows([]string{"queryid", "query", "max_exec_time", "mean_exec_time"}).
-	//			AddRow(1, "TEST UPDATE 1", 33, 12).
-	//			AddRow(2, "TEST UPDATE 2", 22, 8),
-	//	)
 
 	type args struct {
 		ctx    context.Context
