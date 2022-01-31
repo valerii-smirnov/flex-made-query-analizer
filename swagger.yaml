@@ -1,0 +1,93 @@
+openapi: 3.0.3
+info:
+  title: postgres query analyzer
+  description: aplication provides an api for pg_stat_statements extention to analyze queries.
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /database/queries:
+    get:
+      summary: "Get queries"
+      parameters:
+        - in: query
+          name: type
+          schema: { type: string, enum: [ "select","update","insert","delete" ], example: "select" }
+          required: false
+        - in: query
+          name: sorting
+          schema: { type: string, enum: [ "first-slow","first-fast" ], example: "first-slow", default: "first-slow" }
+          required: false
+        - $ref: "#/components/parameters/PagingPage"
+        - $ref: "#/components/parameters/PagingPerPage"
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/QueriesResponse' }
+        400: { $ref: '#/components/responses/BadRequest' }
+        500: { $ref: '#/components/responses/InternalServerError'}
+
+
+components:
+  parameters:
+    PagingPage:
+      name: page
+      in: query
+      required: false
+      schema: { type: integer, example: 1, default: 1 }
+
+    PagingPerPage:
+      name: per-page
+      in: query
+      required: false
+      schema: { type: integer, example: 20, default: 20 }
+
+  schemas:
+    QueriesResponse:
+      type: object
+      properties:
+        query_id: { type: integer }
+        query: { type: string }
+        max_execution_time: { type: number }
+        mean_execution_time: { type: number }
+
+    ErrorResponse:
+      type: object
+      required: [ msg, error ]
+      properties:
+        msg: { type: string }
+        error: { type: string }
+      example:
+        msg: "error parsing page parameter from request"
+        field: "field error"
+    InternalErrorResponse:
+      type: object
+      required: [msg, error]
+      properties:
+        msg: {type: string}
+        error: {type: string}
+      example:
+        msg: "internal server error"
+        error: "some error"
+
+
+  responses:
+    BadRequest:
+      description: Bad Request. The response message will contain further hints.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalErrorResponse'
+
+
+  
