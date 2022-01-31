@@ -9,7 +9,8 @@ project
 
 ---
 
-All necessary dependencies, data and dumps are configured automatically. You don't need to do anything manually.
+All necessary dependencies, database extensions, data and dumps are configured automatically. You don't need to do 
+anything manually.
 
 ---
 
@@ -33,6 +34,6 @@ To run unit test with coverage run command `make test` from the root of the proj
 
 ---
 
-Every command and application is dockerized, and you don't need to have installed soft
+Every command and application are dockerized, and you don't need to have installed soft
 on your local machine. Only requirement is you need to have installed `docker` and 
 `docker-compose`.
