@@ -46,14 +46,16 @@ func TestDBDonfig_GetPostgresDsn(t *testing.T) {
 
 func TestNew(t *testing.T) {
 	tests := map[string]struct {
-		setEnvFf func()
-		want     *Configuration
-		wantErr  bool
+		setEnvFf  func()
+		dropEnvFn func()
+		want      *Configuration
+		wantErr   bool
 	}{
 		"error.parsing envs": {
-			setEnvFf: func() {},
-			want:     nil,
-			wantErr:  true,
+			setEnvFf:  func() {},
+			dropEnvFn: func() {},
+			want:      nil,
+			wantErr:   true,
 		},
 		"success": {
 			setEnvFf: func() {
@@ -63,6 +65,15 @@ func TestNew(t *testing.T) {
 				os.Setenv("DB_PASSWORD", "postgres")
 				os.Setenv("DB_NAME", "test")
 				os.Setenv("APPLICATION_PORT", "8080")
+			},
+
+			dropEnvFn: func() {
+				os.Unsetenv("DB_HOST")
+				os.Unsetenv("DB_PORT")
+				os.Unsetenv("DB_USER")
+				os.Unsetenv("DB_PASSWORD")
+				os.Unsetenv("DB_NAME")
+				os.Unsetenv("APPLICATION_PORT")
 			},
 			want: &Configuration{
 				ApplicationPort: "8080",
@@ -85,6 +96,7 @@ func TestNew(t *testing.T) {
 			assert.Equal(t, tt.wantErr, err != nil)
 			assert.Equal(t, tt.want, got)
 
+			tt.dropEnvFn()
 		})
 	}
 }
