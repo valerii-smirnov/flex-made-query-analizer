@@ -30,7 +30,8 @@ root of the project.
 
 ---
 
-To run unit test with coverage run command `make test` from the root of the project.
+To run unit test with coverage in dockerized mode, run command `make test` from the root of the project.
+To run unit test with coverage in local mode, run command `make test-local` from the root of the project.
 
 ---
 
