@@ -18,12 +18,12 @@ func main() {
 
 	cfg, err := configuration.New()
 	if err != nil {
-		logger.Fatal(logger.WithField("error", err))
+		logger.WithField("error", err).Fatal("error parsing env variables into the configuration struct")
 	}
 
 	db, err := gorm.Open(postgres.Open(cfg.DBDonfig.GetPostgresDsn()), &gorm.Config{})
 	if err != nil {
-		logger.Fatal(logger.WithField("error", err))
+		logger.WithField("error", err).Fatal("error establishing database connection")
 	}
 
 	val := validator.New()
@@ -35,6 +35,6 @@ func main() {
 	app.Get("/database/queries", statisticTransport.GetQueriesStatistic)
 
 	if err := app.Listen(fmt.Sprintf(":%s", cfg.ApplicationPort)); err != nil {
-		panic(err)
+		logger.WithField("error", err).Fatal("error starting http server")
 	}
 }
